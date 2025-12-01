@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscar - ConnectCat</title>
+  <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container py-4">
+    <h1>Buscar</h1>
+    <form class="row g-2 mb-3" action="{{ url('/search') }}" method="GET">
+      <div class="col-md-10">
+        <input class="form-control" name="q" type="search" placeholder="Buscar usuarios o publicaciones...">
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-primary w-100" type="submit">Buscar</button>
+      </div>
+    </form>
+
+    <div class="card">
+      <div class="card-body">
+        <p class="small text-muted">Resultados de búsqueda (ejemplo).</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="{{ asset('assets/js/app.js') }}"></script>
+</body>
+
+</html>

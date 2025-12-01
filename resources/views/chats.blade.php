@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chats - ConnectCat</title>
+    <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container py-4">
+        <h1>Chats</h1>
+        <div class="row">
+        <div class="col-md-4">
+            <ul class="list-group">
+            <li class="list-group-item">Usuario 1</li>
+            <li class="list-group-item">Usuario 2</li>
+            </ul>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+            <div class="card-body">
+                <p class="text-muted small">Selecciona una conversación para empezar a chatear.</p>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="{{ asset('assets/js/app.js') }}"></script>
+
+</body>
+
+</html>
