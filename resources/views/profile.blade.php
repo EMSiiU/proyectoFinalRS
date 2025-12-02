@@ -27,16 +27,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="bi bi-search"></i> Explorar
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('notifications') }}">
-                            <i class="bi bi-bell-fill"></i> Notificaciones
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('messages') }}">
                             <i class="bi bi-envelope-fill"></i> Mensajes
                         </a>
@@ -96,7 +86,7 @@
                     <div class="card-body">
                         @php
                             $fullName = trim(Auth::user()->nombre . ' ' . (Auth::user()->apellido1 ?? '') . ' ' . (Auth::user()->apellido2 ?? ''));
-                            $username = Auth::user()->usuario ?? strtolower(str_replace(' ', '.', $fullName));
+                            $usuario = Auth::user()->usuario ?? strtolower(str_replace(' ', '.', $fullName));
                         @endphp
                         
                         <div class="d-flex justify-content-between align-items-start" style="margin-top: -100px; position: relative; z-index: 10;">
@@ -107,18 +97,10 @@
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode($fullName) }}&background=random&size=128" 
                                      alt="{{ $fullName }}" class="rounded-circle border border-4 border-white" width="128" height="128">
                             @endif
-                            @if(Auth::id() === $user->id_usuario)
-                                <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary rounded-pill">
-                                    <i class="bi bi-pencil"></i> Editar perfil
-                                </a>
-                            @else
-                                <x-follow-button :user="$user" />
-                            @endif
                         </div>
 
                         <div class="mt-3">
                             <h2 class="mb-0 fw-bold">{{ $fullName }}</h2>
-                            <p class="text-muted mb-3">@{{ $username }}</p>
                             
                             <p class="mb-3">
                                 @if(isset(Auth::user()->location) && Auth::user()->location)
@@ -130,7 +112,7 @@
                                     <a href="{{ Auth::user()->website }}" class="text-decoration-none" target="_blank">{{ parse_url(Auth::user()->website, PHP_URL_HOST) ?? Auth::user()->website }}</a>
                                     <span class="mx-2">•</span>
                                 @endif
-                                <i class="bi bi-calendar3"></i> Se unió en {{ Auth::user()->created_at ? Auth::user()->created_at->locale('es')->isoFormat('MMMM [de] YYYY') : 'Noviembre de 2024' }}
+                                <i class="bi bi-calendar3"></i> Se unió en {{ Auth::user()->created_at ? Auth::user()->created_at->locale('es')->isoFormat('MMMM [de] YYYY') : 'Diciembre de 2025' }}
                             </p>
 
                             <p class="text-muted">
@@ -194,7 +176,7 @@
                                         <x-user-avatar size="48" />
                                         <div class="flex-grow-1">
                                             <strong>{{ $fullName }}</strong>
-                                            <small class="text-muted d-block">@{{ $username }} • {{ $publicacion->fecha->diffForHumans() }}</small>
+                                            <small class="text-muted d-block">@{{ $usuario }} • {{ $publicacion->fecha->diffForHumans() }}</small>
                                         </div>
                                         <button class="btn btn-sm btn-light">
                                             <i class="bi bi-three-dots"></i>
@@ -241,7 +223,6 @@
                                         <x-user-avatar :user="$commentedPost->usuario" size="48" />
                                         <div class="flex-grow-1">
                                             <strong>{{ $commentedPost->usuario->name }}</strong>
-                                            <small class="text-muted d-block">@{{ $commentedPost->usuario->usuario }} • {{ $commentedPost->fecha->diffForHumans() }}</small>
                                         </div>
                                     </div>
                                     <p class="card-text mb-3">{{ $commentedPost->texto }}</p>

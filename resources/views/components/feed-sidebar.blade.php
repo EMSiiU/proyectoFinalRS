@@ -180,18 +180,17 @@
             <div class="card-body text-center">
                 <x-user-avatar size="80" class="mb-3" />
                 <h5 class="card-title mb-1">{{ Auth::user()->name }}</h5>
-                <p class="text-muted small mb-3">@{{ Auth::user()->usuario ?? strtolower(str_replace(' ', '.', Auth::user()->name)) }}</p>
                 <div class="row text-center small mb-3">
                     <div class="col">
-                        <strong>24</strong>
+                        <strong>{{ Auth::user()->publicaciones()->count() }}</strong>
                         <div class="text-muted">Publicaciones</div>
                     </div>
                     <div class="col">
-                        <strong>156</strong>
+                        <strong>{{ Auth::user()->seguidores()->count() }}</strong>
                         <div class="text-muted">Seguidores</div>
                     </div>
                     <div class="col">
-                        <strong>89</strong>
+                        <strong>{{ Auth::user()->seguidos()->count() }}</strong>
                         <div class="text-muted">Siguiendo</div>
                     </div>
                 </div>
@@ -216,7 +215,7 @@
                                 <x-user-avatar :user="$user" size="32" class="me-2" />
                                 <div class="small">
                                     <strong class="d-block">{{ $user->name }}</strong>
-                                    <span class="text-muted">@ {{ $user->usuario }}</span>
+                                    <span class="text-muted">@{{ $user->usuario }}</span>
                                 </div>
                             </div>
                             <x-follow-button :user="$user" :small="true" />

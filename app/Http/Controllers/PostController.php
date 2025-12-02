@@ -41,7 +41,13 @@ class PostController extends Controller
                 return $publicacion;
             });
         
-        return view('feed', compact('publicaciones'));
+        // Get suggested users (users not followed by current user, excluding self)
+        $suggestedUsers = \App\Models\User::whereNotIn('id_usuario', $followedUserIds)
+            ->inRandomOrder()
+            ->take(5)
+            ->get();
+        
+        return view('feed', compact('publicaciones', 'suggestedUsers'));
     }
 
     /**

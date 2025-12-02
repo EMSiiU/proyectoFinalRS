@@ -126,16 +126,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="bi bi-search"></i> Explorar
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('notifications') }}">
-                            <i class="bi bi-bell-fill"></i> Notificaciones
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link active" href="{{ route('messages') }}">
                             <i class="bi bi-envelope-fill"></i> Mensajes
                         </a>

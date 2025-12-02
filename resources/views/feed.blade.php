@@ -75,7 +75,7 @@
                 <!-- Encabezado del feed -->
                 <div class="card mb-4 shadow-sm border-0">
                     <div class="card-body">
-                        <h2 class="card-title mb-0">🏠 Inicio</h2>
+                        <h2 class="card-title mb-0">Feed</h2>
                     </div>
                 </div>
 
@@ -105,8 +105,7 @@
                         <form action="{{ route('posts.store') }}" method="POST">
                             @csrf
                             <div class="d-flex gap-3">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=random" 
-                                     alt="{{ Auth::user()->name }}" class="rounded-circle flex-shrink-0" width="48" height="48">
+                                <x-user-avatar size="48" class="flex-shrink-0" />
                                 <div class="flex-grow-1">
                                     <textarea name="texto" 
                                               class="form-control form-control-lg border-0 ps-0 @error('texto') is-invalid @enderror" 
@@ -133,11 +132,10 @@
                     <div class="card mb-3 shadow-sm border-0">
                         <div class="card-body">
                             <div class="d-flex gap-3 mb-3">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($publicacion->usuario->name) }}&background=random" 
-                                     alt="{{ $publicacion->usuario->name }}" class="rounded-circle flex-shrink-0" width="48" height="48">
+                                <x-user-avatar :user="$publicacion->usuario" size="48" class="flex-shrink-0" />
                                 <div class="flex-grow-1">
                                     <strong>{{ $publicacion->usuario->name }}</strong>
-                                    <small class="text-muted d-block">@{{ $publicacion->usuario->usuario }} • {{ $publicacion->fecha->diffForHumans() }}</small>
+                                    <small class="text-muted d-block">{{ $publicacion->fecha->diffForHumans() }}</small>
                                 </div>
                                 @if($publicacion->id_usuario === Auth::id())
                                     <button class="btn btn-sm btn-light">
@@ -175,11 +173,7 @@
                                     <div class="mb-3">
                                         @foreach($publicacion->comentarios as $comentario)
                                             <div class="d-flex gap-2 mb-3">
-                                                <img src="https://ui-avatars.com/api/?name={{ urlencode($comentario->usuario->name) }}&background=random" 
-                                                     alt="{{ $comentario->usuario->name }}" 
-                                                     class="rounded-circle flex-shrink-0" 
-                                                     width="32" 
-                                                     height="32">
+                                                <x-user-avatar :user="$comentario->usuario" size="32" class="flex-shrink-0" />
                                                 <div class="flex-grow-1">
                                                     <div class="bg-light rounded p-2">
                                                         <strong class="small">{{ $comentario->usuario->name }}</strong>
@@ -196,11 +190,7 @@
                                 <form action="{{ route('posts.comments.store', $publicacion->id_publicacion) }}" method="POST">
                                     @csrf
                                     <div class="d-flex gap-2">
-                                        <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=random" 
-                                             alt="{{ Auth::user()->name }}" 
-                                             class="rounded-circle flex-shrink-0" 
-                                             width="32" 
-                                             height="32">
+                                        <x-user-avatar size="32" class="flex-shrink-0" />
                                         <div class="flex-grow-1">
                                             <input type="text" 
                                                    name="comentario" 
