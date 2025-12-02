@@ -89,114 +89,103 @@
                     </div>
                 </div>
 
+                <!-- Mensajes de éxito/error -->
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
                 <!-- Formulario para crear publicación -->
                 <div class="card mb-4 shadow-sm border-0">
                     <div class="card-body">
-                        <div class="d-flex gap-3">
-                            <img src="https://ui-avatars.com/api/?name=Tu+Nombre&background=random" 
-                                 alt="Tu avatar" class="rounded-circle flex-shrink-0" width="48" height="48">
-                            <div class="flex-grow-1">
-                                <textarea class="form-control form-control-lg border-0 ps-0" 
-                                          placeholder="¿En qué estás pensando?" rows="3" style="resize: none;"></textarea>
-                                <div class="d-flex justify-content-end gap-2 mt-3 pt-3 border-top">
-                                    <button class="btn btn-sm btn-light text-muted">
-                                        <i class="bi bi-image"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-light text-muted">
-                                        <i class="bi bi-emoji-smile"></i>
-                                    </button>
-                                    <button class="btn btn-primary rounded-pill px-4">Publicar</button>
+                        <form action="{{ route('posts.store') }}" method="POST">
+                            @csrf
+                            <div class="d-flex gap-3">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=random" 
+                                     alt="{{ Auth::user()->name }}" class="rounded-circle flex-shrink-0" width="48" height="48">
+                                <div class="flex-grow-1">
+                                    <textarea name="texto" 
+                                              class="form-control form-control-lg border-0 ps-0 @error('texto') is-invalid @enderror" 
+                                              placeholder="¿En qué estás pensando?" 
+                                              rows="3" 
+                                              style="resize: none;">{{ old('texto') }}</textarea>
+                                    <div class="d-flex justify-content-end gap-2 mt-3 pt-3 border-top">
+                                        <button type="button" class="btn btn-sm btn-light text-muted" disabled>
+                                            <i class="bi bi-image"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-light text-muted" disabled>
+                                            <i class="bi bi-emoji-smile"></i>
+                                        </button>
+                                        <button type="submit" class="btn btn-primary rounded-pill px-4">Publicar</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
 
                 <!-- Publicaciones -->
-                <div class="card mb-3 shadow-sm border-0">
-                    <div class="card-body">
-                        <div class="d-flex gap-3 mb-3">
-                            <img src="https://ui-avatars.com/api/?name=Juan+Carlos&background=random" 
-                                 alt="Juan Carlos" class="rounded-circle flex-shrink-0" width="48" height="48">
-                            <div class="flex-grow-1">
-                                <strong>Juan Carlos</strong>
-                                <small class="text-muted d-block">@juan.carlos • Hace 2 horas</small>
+                @forelse($publicaciones as $publicacion)
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body">
+                            <div class="d-flex gap-3 mb-3">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($publicacion->usuario->name) }}&background=random" 
+                                     alt="{{ $publicacion->usuario->name }}" class="rounded-circle flex-shrink-0" width="48" height="48">
+                                <div class="flex-grow-1">
+                                    <strong>{{ $publicacion->usuario->name }}</strong>
+                                    <small class="text-muted d-block">@{{ $publicacion->usuario->usuario }} • {{ $publicacion->fecha->diffForHumans() }}</small>
+                                </div>
+                                @if($publicacion->id_usuario === Auth::id())
+                                    <button class="btn btn-sm btn-light">
+                                        <i class="bi bi-three-dots"></i>
+                                    </button>
+                                @endif
                             </div>
-                            <button class="btn btn-sm btn-light">
-                                <i class="bi bi-three-dots"></i>
-                            </button>
-                        </div>
-                        <p class="card-text mb-3">Acabo de terminar un proyecto increíble con Laravel. ¡Los componentes de Blade son fantásticos! 🚀</p>
-                        <div class="ratio ratio-16x9 mb-3 bg-secondary rounded" style="background: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500') center/cover;"></div>
-                        <div class="d-flex justify-content-between text-muted small">
-                            <button class="btn btn-sm btn-light text-muted">
-                                <i class="bi bi-heart"></i> 234
-                            </button>
-                            <button class="btn btn-sm btn-light text-muted">
-                                <i class="bi bi-chat"></i> 45
-                            </button>
-                            <button class="btn btn-sm btn-light text-muted">
-                                <i class="bi bi-share"></i> 12
-                            </button>
+                            <p class="card-text mb-3">{{ $publicacion->texto }}</p>
+                            
+                            @if($publicacion->multimedia)
+                                <div class="ratio ratio-16x9 mb-3 bg-secondary rounded" style="background: url('{{ asset('storage/' . $publicacion->multimedia) }}') center/cover;"></div>
+                            @endif
+                            
+                            <div class="d-flex justify-content-between text-muted small">
+                                <form action="{{ route('posts.like', $publicacion->id_publicacion) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-light {{ $publicacion->user_has_liked ? 'text-danger' : 'text-muted' }}">
+                                        <i class="bi {{ $publicacion->user_has_liked ? 'bi-heart-fill' : 'bi-heart' }}"></i> {{ $publicacion->likes->count() }}
+                                    </button>
+                                </form>
+                                <button class="btn btn-sm btn-light text-muted">
+                                    <i class="bi bi-chat"></i> {{ $publicacion->comentarios->count() }}
+                                </button>
+                                <button class="btn btn-sm btn-light text-muted">
+                                    <i class="bi bi-share"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="card mb-3 shadow-sm border-0">
-                    <div class="card-body">
-                        <div class="d-flex gap-3 mb-3">
-                            <img src="https://ui-avatars.com/api/?name=María+López&background=random" 
-                                 alt="María López" class="rounded-circle flex-shrink-0" width="48" height="48">
-                            <div class="flex-grow-1">
-                                <strong>María López</strong>
-                                <small class="text-muted d-block">@maria.lopez • Hace 4 horas</small>
-                            </div>
-                            <button class="btn btn-sm btn-light">
-                                <i class="bi bi-three-dots"></i>
-                            </button>
-                        </div>
-                        <p class="card-text mb-0">Tips para optimizar tu CSS y mejorar el rendimiento de tu sitio web. #WebDevelopment #CSS #Performance</p>
-                        <div class="d-flex justify-content-between text-muted small mt-3">
-                            <button class="btn btn-sm btn-light text-muted">
-                                <i class="bi bi-heart"></i> 567
-                            </button>
-                            <button class="btn btn-sm btn-light text-muted">
-                                <i class="bi bi-chat"></i> 89
-                            </button>
-                            <button class="btn btn-sm btn-light text-muted">
-                                <i class="bi bi-share"></i> 34
-                            </button>
+                @empty
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body text-center py-5">
+                            <i class="bi bi-inbox display-1 text-muted d-block mb-3"></i>
+                            <h5 class="text-muted">No hay publicaciones aún</h5>
+                            <p class="text-muted mb-0">¡Sé el primero en publicar algo o sigue a otros usuarios para ver sus publicaciones!</p>
                         </div>
                     </div>
-                </div>
-
-                <div class="card mb-3 shadow-sm border-0">
-                    <div class="card-body">
-                        <div class="d-flex gap-3 mb-3">
-                            <img src="https://ui-avatars.com/api/?name=Pedro+García&background=random" 
-                                 alt="Pedro García" class="rounded-circle flex-shrink-0" width="48" height="48">
-                            <div class="flex-grow-1">
-                                <strong>Pedro García</strong>
-                                <small class="text-muted d-block">@pedro.garcia • Hace 6 horas</small>
-                            </div>
-                            <button class="btn btn-sm btn-light">
-                                <i class="bi bi-three-dots"></i>
-                            </button>
-                        </div>
-                        <p class="card-text mb-0">Configurando mi nueva máquina de desarrollo con Docker. ¡Qué fácil es tener un entorno consistente! 🐳</p>
-                        <div class="d-flex justify-content-between text-muted small mt-3">
-                            <button class="btn btn-sm btn-light text-muted">
-                                <i class="bi bi-heart"></i> 432
-                            </button>
-                            <button class="btn btn-sm btn-light text-muted">
-                                <i class="bi bi-chat"></i> 67
-                            </button>
-                            <button class="btn btn-sm btn-light text-muted">
-                                <i class="bi bi-share"></i> 23
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
 
             <!-- Sidebar (componente dedicado) -->

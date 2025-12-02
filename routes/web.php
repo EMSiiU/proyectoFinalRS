@@ -10,7 +10,10 @@ Route::get('/', function () {
 
 
 // Simple demo view routes for the static pages added from HTML -> Blade
-Route::view('/feed', 'feed')->name('feed');
+use App\Http\Controllers\PostController;
+
+Route::get('/feed', [PostController::class, 'index'])->name('feed')->middleware('auth');
+Route::post('/posts', [PostController::class, 'store'])->name('posts.store')->middleware('auth');
 Route::view('/notifications', 'notifications')->name('notifications');
 use App\Http\Controllers\MessageController;
 
@@ -35,6 +38,12 @@ Route::middleware('auth')->group(function () {
     // Follow system routes
     Route::post('/users/{user}/follow', [\App\Http\Controllers\FollowController::class, 'store'])->name('users.follow');
     Route::delete('/users/{user}/unfollow', [\App\Http\Controllers\FollowController::class, 'destroy'])->name('users.unfollow');
+    
+    // User search route
+    Route::get('/users/search', [\App\Http\Controllers\UserController::class, 'search'])->name('users.search');
+    
+    // Like/Unlike route
+    Route::post('/posts/{publicacion}/like', [\App\Http\Controllers\LikeController::class, 'toggle'])->name('posts.like');
 });
 
 require __DIR__.'/auth.php';

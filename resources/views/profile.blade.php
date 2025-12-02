@@ -241,27 +241,50 @@
 
                     <!-- Me gusta -->
                     <div class="tab-pane fade" id="likes" role="tabpanel" aria-labelledby="likes-tab">
-                        <div class="card mb-3 shadow-sm border-0">
-                            <div class="card-body">
-                                <div class="d-flex gap-3 mb-3">
-                                    <img src="https://ui-avatars.com/api/?name=María+López&background=random" 
-                                         alt="María López" class="rounded-circle flex-shrink-0" width="48" height="48">
-                                    <div class="flex-grow-1">
-                                        <strong>María López</strong>
-                                        <small class="text-muted d-block">@maria.lopez • Hace 3 horas</small>
+                        @forelse($likedPosts as $likedPost)
+                            <div class="card mb-3 shadow-sm border-0">
+                                <div class="card-body">
+                                    <div class="d-flex gap-3 mb-3">
+                                        <x-user-avatar :user="$likedPost->usuario" size="48" />
+                                        <div class="flex-grow-1">
+                                            <strong>{{ $likedPost->usuario->name }}</strong>
+                                            <small class="text-muted d-block">@{{ $likedPost->usuario->usuario }} • {{ $likedPost->fecha->diffForHumans() }}</small>
+                                        </div>
+                                    </div>
+                                    <p class="card-text mb-3">{{ $likedPost->texto }}</p>
+                                    @if($likedPost->multimedia)
+                                        <div class="ratio ratio-16x9 mb-3 bg-secondary rounded" 
+                                             style="background: url('{{ asset('storage/' . $likedPost->multimedia) }}') center/cover;">
+                                        </div>
+                                    @endif
+                                    <div class="d-flex justify-content-between text-muted small">
+                                        <form action="{{ route('posts.like', $likedPost->id_publicacion) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-light text-danger">
+                                                <i class="bi bi-heart-fill"></i> {{ $likedPost->likes_count }}
+                                            </button>
+                                        </form>
+                                        <button class="btn btn-sm btn-light text-muted">
+                                            <i class="bi bi-chat"></i> {{ $likedPost->comentarios_count }}
+                                        </button>
+                                        <button class="btn btn-sm btn-light text-muted">
+                                            <i class="bi bi-share"></i>
+                                        </button>
                                     </div>
                                 </div>
-                                <p class="card-text mb-0">Tips para mejorar tu CSS y rendimiento web. #WebDevelopment #Performance</p>
-                                <div class="d-flex justify-content-between text-muted small mt-3">
-                                    <button class="btn btn-sm btn-light text-muted">
-                                        <i class="bi bi-heart-fill text-danger"></i> 234
-                                    </button>
-                                    <button class="btn btn-sm btn-light text-muted">
-                                        <i class="bi bi-chat"></i> 45
-                                    </button>
-                                </div>
                             </div>
-                        </div>
+                        @empty
+                            <div class="alert alert-info text-center py-5">
+                                <i class="bi bi-heart display-6"></i>
+                                <p class="mt-3 mb-0">No has dado like a ninguna publicación aún</p>
+                            </div>
+                        @endforelse
+                        
+                        @if($likedPosts->hasPages())
+                            <div class="mt-4">
+                                {{ $likedPosts->links() }}
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Media -->

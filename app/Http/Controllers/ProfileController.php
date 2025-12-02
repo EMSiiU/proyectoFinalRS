@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Like;
+use App\Models\Publicacion;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,10 +24,25 @@ class ProfileController extends Controller
         $publicaciones = $user->publicaciones()
             ->withCount(['likes', 'comentarios'])
             ->paginate(10);
+        
+        // Load liked posts (posts the user has liked)
+        $likedPosts = Publicacion::whereHas('likes', function($query) use ($user) {
+                $query->where('id_usuario', $user->id_usuario);
+            })
+            ->with(['usuario', 'likes', 'comentarios'])
+            ->withCount(['likes', 'comentarios'])
+            ->orderByDesc(
+                Like::select('fecha')
+                    ->whereColumn('likes.id_publicacion', 'publicacion.id_publicacion')
+                    ->where('likes.id_usuario', $user->id_usuario)
+                    ->limit(1)
+            )
+            ->paginate(10, ['*'], 'liked_page');
 
         return view('profile', [
             'user' => $user,
             'publicaciones' => $publicaciones,
+            'likedPosts' => $likedPosts,
         ]);
     }
 

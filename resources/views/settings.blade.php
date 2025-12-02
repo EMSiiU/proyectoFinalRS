@@ -305,9 +305,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Sidebar -->
-            @include('components.feed-sidebar')
         </div>
     </div>
 
@@ -341,28 +338,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary">Cambiar contraseña</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal: Descargar Datos -->
-    <div class="modal fade" id="downloadDataModal" tabindex="-1" aria-labelledby="downloadDataLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="downloadDataLabel">📥 Descargar mis Datos</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Recibirás un email con un enlace para descargar un archivo con todos tus datos personales en formato JSON.</p>
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i> El enlace expirará en 7 días
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Solicitar descarga</button>
                 </div>
             </div>
         </div>
