@@ -86,7 +86,7 @@
                     <div class="card-body">
                         @php
                             $fullName = trim(Auth::user()->nombre . ' ' . (Auth::user()->apellido1 ?? '') . ' ' . (Auth::user()->apellido2 ?? ''));
-                            $usuario = Auth::user()->usuario ?? strtolower(str_replace(' ', '.', $fullName));
+                            $usuario = Auth::user()->usuario ?? strtolower(str_replace(' ', '.', $usuario));
                         @endphp
                         
                         <div class="d-flex justify-content-between align-items-start" style="margin-top: -100px; position: relative; z-index: 10;">
@@ -154,11 +154,6 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="likes-tab" data-bs-toggle="tab" data-bs-target="#likes" type="button" role="tab" aria-controls="likes" aria-selected="false">
                                     <i class="bi bi-heart"></i> Me gusta
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="media-tab" data-bs-toggle="tab" data-bs-target="#media" type="button" role="tab" aria-controls="media" aria-selected="false">
-                                    <i class="bi bi-images"></i> Media
                                 </button>
                             </li>
                         </ul>
@@ -315,17 +310,7 @@
                         @endif
                     </div>
 
-                    <!-- Media -->
-                    <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=300" alt="Imagen" class="img-fluid rounded shadow-sm">
-                            </div>
-                            <div class="col-md-6">
-                                <img src="https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=300" alt="Imagen" class="img-fluid rounded shadow-sm">
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
 
