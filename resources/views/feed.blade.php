@@ -26,16 +26,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="bi bi-search"></i> Explorar
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('notifications') }}">
-                            <i class="bi bi-bell-fill"></i> Notificaciones
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('messages') }}">
                             <i class="bi bi-envelope-fill"></i> Mensajes
                         </a>
@@ -161,19 +151,69 @@
                                 <div class="ratio ratio-16x9 mb-3 bg-secondary rounded" style="background: url('{{ asset('storage/' . $publicacion->multimedia) }}') center/cover;"></div>
                             @endif
                             
-                            <div class="d-flex justify-content-between text-muted small">
+                            <div class="d-flex justify-content-between text-muted small mb-3">
                                 <form action="{{ route('posts.like', $publicacion->id_publicacion) }}" method="POST" class="d-inline">
                                     @csrf
                                     <button type="submit" class="btn btn-sm btn-light {{ $publicacion->user_has_liked ? 'text-danger' : 'text-muted' }}">
                                         <i class="bi {{ $publicacion->user_has_liked ? 'bi-heart-fill' : 'bi-heart' }}"></i> {{ $publicacion->likes->count() }}
                                     </button>
                                 </form>
-                                <button class="btn btn-sm btn-light text-muted">
+                                <button class="btn btn-sm btn-light text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#comments-{{ $publicacion->id_publicacion }}">
                                     <i class="bi bi-chat"></i> {{ $publicacion->comentarios->count() }}
                                 </button>
                                 <button class="btn btn-sm btn-light text-muted">
                                     <i class="bi bi-share"></i>
                                 </button>
+                            </div>
+                            
+                            <!-- Comments Section -->
+                            <div class="collapse" id="comments-{{ $publicacion->id_publicacion }}">
+                                <hr class="my-3">
+                                
+                                <!-- Existing Comments -->
+                                @if($publicacion->comentarios->count() > 0)
+                                    <div class="mb-3">
+                                        @foreach($publicacion->comentarios as $comentario)
+                                            <div class="d-flex gap-2 mb-3">
+                                                <img src="https://ui-avatars.com/api/?name={{ urlencode($comentario->usuario->name) }}&background=random" 
+                                                     alt="{{ $comentario->usuario->name }}" 
+                                                     class="rounded-circle flex-shrink-0" 
+                                                     width="32" 
+                                                     height="32">
+                                                <div class="flex-grow-1">
+                                                    <div class="bg-light rounded p-2">
+                                                        <strong class="small">{{ $comentario->usuario->name }}</strong>
+                                                        <p class="mb-0 small">{{ $comentario->comentario }}</p>
+                                                    </div>
+                                                    <small class="text-muted">{{ $comentario->fecha->diffForHumans() }}</small>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                                
+                                <!-- New Comment Form -->
+                                <form action="{{ route('posts.comments.store', $publicacion->id_publicacion) }}" method="POST">
+                                    @csrf
+                                    <div class="d-flex gap-2">
+                                        <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=random" 
+                                             alt="{{ Auth::user()->name }}" 
+                                             class="rounded-circle flex-shrink-0" 
+                                             width="32" 
+                                             height="32">
+                                        <div class="flex-grow-1">
+                                            <input type="text" 
+                                                   name="comentario" 
+                                                   class="form-control form-control-sm" 
+                                                   placeholder="Escribe un comentario..."
+                                                   required
+                                                   maxlength="500">
+                                        </div>
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-send"></i>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>

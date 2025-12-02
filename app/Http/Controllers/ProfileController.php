@@ -38,11 +38,27 @@ class ProfileController extends Controller
                     ->limit(1)
             )
             ->paginate(10, ['*'], 'liked_page');
+        
+        // Load commented posts (posts where user has commented)
+        $commentedPosts = Publicacion::whereHas('comentarios', function($query) use ($user) {
+                $query->where('id_usuario', $user->id_usuario);
+            })
+            ->with(['usuario', 'likes', 'comentarios' => function($query) use ($user) {
+                $query->where('id_usuario', $user->id_usuario)->with('usuario');
+            }])
+            ->withCount(['likes', 'comentarios'])
+            ->get()
+            ->map(function($post) use ($user) {
+                // Get the user's comment on this post
+                $post->user_comment = $post->comentarios->first();
+                return $post;
+            });
 
         return view('profile', [
             'user' => $user,
             'publicaciones' => $publicaciones,
             'likedPosts' => $likedPosts,
+            'commentedPosts' => $commentedPosts,
         ]);
     }
 

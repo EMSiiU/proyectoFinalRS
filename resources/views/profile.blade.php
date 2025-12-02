@@ -233,10 +233,57 @@
 
                     <!-- Respuestas -->
                     <div class="tab-pane fade" id="replies" role="tabpanel" aria-labelledby="replies-tab">
-                        <div class="alert alert-info text-center py-5">
-                            <i class="bi bi-info-circle display-6"></i>
-                            <p class="mt-3 mb-0">No hay respuestas aún</p>
-                        </div>
+                        @forelse($commentedPosts as $commentedPost)
+                            <div class="card mb-3 shadow-sm border-0">
+                                <div class="card-body">
+                                    <!-- Original Post -->
+                                    <div class="d-flex gap-3 mb-3">
+                                        <x-user-avatar :user="$commentedPost->usuario" size="48" />
+                                        <div class="flex-grow-1">
+                                            <strong>{{ $commentedPost->usuario->name }}</strong>
+                                            <small class="text-muted d-block">@{{ $commentedPost->usuario->usuario }} • {{ $commentedPost->fecha->diffForHumans() }}</small>
+                                        </div>
+                                    </div>
+                                    <p class="card-text mb-3">{{ $commentedPost->texto }}</p>
+                                    @if($commentedPost->multimedia)
+                                        <div class="ratio ratio-16x9 mb-3 bg-secondary rounded" 
+                                             style="background: url('{{ asset('storage/' . $commentedPost->multimedia) }}') center/cover;">
+                                        </div>
+                                    @endif
+                                    
+                                    <!-- User's Comment Highlighted -->
+                                    @if($commentedPost->user_comment)
+                                        <div class="border-start border-primary border-3 ps-3 bg-light rounded p-3 mb-3">
+                                            <div class="d-flex gap-2 align-items-start">
+                                                <i class="bi bi-reply-fill text-primary"></i>
+                                                <div class="flex-grow-1">
+                                                    <small class="text-muted d-block mb-1">Tu respuesta:</small>
+                                                    <p class="mb-0">{{ $commentedPost->user_comment->comentario }}</p>
+                                                    <small class="text-muted">{{ $commentedPost->user_comment->fecha->diffForHumans() }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    
+                                    <div class="d-flex justify-content-between text-muted small">
+                                        <span>
+                                            <i class="bi bi-heart"></i> {{ $commentedPost->likes_count }}
+                                        </span>
+                                        <span>
+                                            <i class="bi bi-chat"></i> {{ $commentedPost->comentarios_count }}
+                                        </span>
+                                        <span>
+                                            <i class="bi bi-share"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="alert alert-info text-center py-5">
+                                <i class="bi bi-chat-left display-6"></i>
+                                <p class="mt-3 mb-0">No has comentado en ninguna publicación aún</p>
+                            </div>
+                        @endforelse
                     </div>
 
                     <!-- Me gusta -->

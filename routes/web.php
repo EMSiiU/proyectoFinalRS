@@ -44,6 +44,9 @@ Route::middleware('auth')->group(function () {
     
     // Like/Unlike route
     Route::post('/posts/{publicacion}/like', [\App\Http\Controllers\LikeController::class, 'toggle'])->name('posts.like');
+    
+    // Comment route
+    Route::post('/posts/{publicacion}/comments', [\App\Http\Controllers\CommentController::class, 'store'])->name('posts.comments.store');
 });
 
 require __DIR__.'/auth.php';

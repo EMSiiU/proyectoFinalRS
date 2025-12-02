@@ -24,7 +24,13 @@ class PostController extends Controller
         
         // Get posts from followed users and self, ordered by date (most recent first)
         $publicaciones = Publicacion::whereIn('id_usuario', $followedUserIds)
-            ->with(['usuario', 'likes', 'comentarios'])
+            ->with([
+                'usuario', 
+                'likes', 
+                'comentarios' => function($query) {
+                    $query->with('usuario')->orderBy('fecha', 'desc');
+                }
+            ])
             ->orderBy('fecha', 'desc')
             ->get()
             ->map(function($publicacion) use ($user) {
